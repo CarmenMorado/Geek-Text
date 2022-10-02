@@ -13,7 +13,7 @@ class WishlistsSerializer(serializers.ModelSerializer):
 class BooksSerializer(serializers.ModelSerializer):
     class Meta:
         model = Books
-        fields = ('isbn', 'authorid', 'genreid', 'name', 'description', 'price', 'publisher', 'yearpublished', 'copiessold')
+        fields = ('id', 'isbn', 'authorid', 'genreid', 'name', 'description', 'price', 'publisher', 'yearpublished', 'copiessold')
         
 class GenresSerializer(serializers.ModelSerializer):
     class Meta:
