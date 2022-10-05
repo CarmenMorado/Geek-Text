@@ -2,23 +2,22 @@
 from rest_framework import viewsets
 
 from .serializers import WishlistsSerializer
-from .serializers import BooksSerializer
-from .serializers import GenresSerializer
-
 from .models import Wishlists
-from .models import Books
-from .models import Genres
+
+from .serializers import AddressesSerializer
+from .models import Addresses
+
+from .serializers import AuthorsSerializer
+from .models import Authors
 
 class WishlistsViewSet(viewsets.ModelViewSet):
     queryset = Wishlists.objects.all().order_by('name')
     serializer_class = WishlistsSerializer
 
-class BooksViewSet(viewsets.ModelViewSet):
-    queryset = Books.objects.all().order_by('name')
-    serializer_class = BooksSerializer
-    
-class GenresViewSet(viewsets.ModelViewSet):
-    queryset = Genres.objects.all().order_by('genre')
-    serializer_class = GenresSerializer
-    
-    
+class AddressesViewSet(viewsets.ModelViewSet):
+    queryset = Addresses.objects.all().order_by('id')
+    serializer_class = AddressesSerializer
+
+class AuthorsViewSet(viewsets.ModelViewSet):
+    queryset = Authors.objects.all().order_by('id')
+    serializer_class = AuthorsSerializer

@@ -2,22 +2,21 @@
 from rest_framework import serializers
 
 from .models import Wishlists
-from .models import Books
-from .models import Genres
+from .models import Addresses
+from .models import Authors
+
+class AuthorsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Authors
+        fields = ('id', 'firstname', 'lastname', 'biography', 'publisher')
 
 class WishlistsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Wishlists
-        fields = ('userid', 'bookid', 'name')
+        fields = ('UserID', 'BookID', 'name')
              
-class BooksSerializer(serializers.ModelSerializer):
+class AddressesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Books
-        fields = ('id', 'isbn', 'authorid', 'genreid', 'name', 'description', 'price', 'publisher', 'yearpublished', 'copiessold')
-        
-class GenresSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Genres
-        fields = ('id', 'genre')
-
+        model = Addresses
+        fields = ('id', 'userid', 'type', 'address', 'country', 'state', 'city', 'zipcode')
 
