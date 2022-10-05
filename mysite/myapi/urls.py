@@ -4,9 +4,8 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'Wishlists', views.WishlistsViewSet)
-router.register(r'Books', views.BooksViewSet)
-router.register(r'Genres', views.GenresViewSet)
+router.register(r'Users', views.UsersViewSet)
+router.register(r'Creditcards', views.CreditcardsViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
