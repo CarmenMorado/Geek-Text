@@ -10,6 +10,8 @@ router.register(r'Addresses', views.AddressesViewSet, 'Addresses')
 router.register(r'Authors', views.AuthorsViewSet, 'Authors')
 router.register(r'Books', views.BooksViewSet, 'Books')
 router.register(r'Genres', views.GenresViewSet, 'Genres')
+router.register(r'Bookratings', views.BookratingsViewSet, 'Bookratings')
+router.register(r'Purchasedbooks', views.PurchasedbooksViewSet, 'Purchasedbooks')
 
 
 # Wire up our API using automatic URL routing.
