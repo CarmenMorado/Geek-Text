@@ -23,6 +23,18 @@ class WishlistsViewSet(viewsets.ModelViewSet):
     queryset = Wishlists.objects.all().order_by('id')
     serializer_class = WishlistsSerializer
     
+    def list(self, request):
+        queryset = Wishlists.objects.all().order_by('id')
+        userid = self.request.query_params.get('userid')
+        name = self.request.query_params.get('name')
+        if userid and name:
+            queryset = queryset.filter(userid=userid)
+            queryset = queryset.filter(name=name)
+            books = queryset.values('bookid', 'bookid__name')
+            return Response({"Books": list(books)})
+        queryset = queryset.values('id', 'userid', 'userid__firstname', 'bookid', 'bookid__name', 'name')
+        return Response({"Wishlist Results": list(queryset)})
+
     def delete(self, request, pk):
         instance = Wishlists.objects.get(pk)
         instance.delete()
