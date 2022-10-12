@@ -9,7 +9,6 @@ from .models import Genres
 class WishlistsSerializer(serializers.ModelSerializer):
     #userid = serializers.CharField(source='userid.firstname')
     #bookid = serializers.CharField(source='bookid.name')
-
     class Meta:
         model = Wishlists
         fields = ('id', 'userid', 'bookid', 'name')
@@ -23,6 +22,7 @@ class GenresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genres
         fields = ('id', 'genre')
+        
 class BookratingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bookratings
