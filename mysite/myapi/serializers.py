@@ -7,6 +7,9 @@ from .models import Addresses
 from .models import Authors
 from .models import Books
 from .models import Genres
+from .models import Users
+from .models import Creditcards
+
 
 class AuthorsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,11 +17,11 @@ class AuthorsSerializer(serializers.ModelSerializer):
         fields = ('id', 'firstname', 'lastname', 'biography', 'publisher')
 
 class WishlistsSerializer(serializers.ModelSerializer):
-    #userid = serializers.CharField(source='userid.firstname')
-    #bookid = serializers.CharField(source='bookid.name')
+    userid = serializers.CharField(source='userid.firstname')
+    bookid = serializers.CharField(source='bookid.name')
     class Meta:
         model = Wishlists
-        fields = ('UserID', 'BookID', 'name')
+        fields = ('userid', 'bookid', 'name')
              
 class AddressesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,3 +47,13 @@ class PurchasedbooksSerializer(serializers.ModelSerializer):
     class Meta:
         model = Purchasedbooks
         fields = ('orderhistory', 'userid', 'bookid')
+
+class UsersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields = '__all__'
+
+class CreditcardsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Creditcards
+        fields = '__all__'
