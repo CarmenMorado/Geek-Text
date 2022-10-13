@@ -12,6 +12,8 @@ router.register(r'Books', views.BooksViewSet, 'Books')
 router.register(r'Genres', views.GenresViewSet, 'Genres')
 router.register(r'Bookratings', views.BookratingsViewSet, 'Bookratings')
 router.register(r'Purchasedbooks', views.PurchasedbooksViewSet, 'Purchasedbooks')
+router.register(r'Users', views.UsersViewSet, 'Users')
+router.register(r'Creditcards', views.CreditcardsViewSet, 'Creditcards')
 
 
 # Wire up our API using automatic URL routing.

@@ -8,6 +8,8 @@ from .serializers import PurchasedbooksSerializer
 from .serializers import BookratingsSerializer
 from .serializers import AddressesSerializer
 from .serializers import AuthorsSerializer
+from .serializers import UsersSerializer
+from .serializers import CreditcardsSerializer
 
 from .models import Wishlists
 from .models import Books
@@ -16,6 +18,8 @@ from .models import Bookratings
 from .models import Purchasedbooks
 from .models import Authors
 from .models import Addresses
+from .models import Users
+from .models import Creditcards
 
 
 from django.db import IntegrityError # Import IntegrityError
@@ -25,8 +29,10 @@ from rest_framework import status
 from rest_framework.response import Response
             
 class WishlistsViewSet(viewsets.ModelViewSet):
+
     queryset = Wishlists.objects.all().order_by('id')
-    serializer_class = WishlistsSerializer   
+    serializer_class = WishlistsSerializer
+
     def list(self, request):
         queryset = Wishlists.objects.all().order_by('id')
         userid = self.request.query_params.get('userid')
@@ -38,10 +44,14 @@ class WishlistsViewSet(viewsets.ModelViewSet):
             return Response({"Books": list(books)})
         queryset = queryset.values('id', 'userid', 'userid__firstname', 'bookid', 'bookid__name', 'name')
         return Response({"Wishlist Results": list(queryset)})
+
+
     def delete(self, request, pk):
         instance = Wishlists.objects.get(pk)
         instance.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)    
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
     def create(self, request, *args, **kwargs):
         try:
             return super().create(request, *args, **kwargs)
@@ -73,3 +83,12 @@ class BookratingsViewSet(viewsets.ModelViewSet):
 class PurchasedbooksViewSet(viewsets.ModelViewSet):
     queryset = Purchasedbooks.objects.all().order_by('orderhistory', 'userid', 'bookid')
     serializer_class= PurchasedbooksSerializer
+
+class UsersViewSet(viewsets.ModelViewSet):
+    queryset = Users.objects.all().order_by('id')
+    serializer_class = UsersSerializer
+
+
+class CreditcardsViewSet(viewsets.ModelViewSet):
+    queryset = Creditcards.objects.all().order_by('id')
+    serializer_class = CreditcardsSerializer
