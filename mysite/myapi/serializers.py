@@ -5,6 +5,8 @@ from .models import Purchasedbooks
 from .models import Wishlists
 from .models import Addresses
 from .models import Authors
+from .models import Books
+from .models import Genres
 
 class AuthorsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,7 +24,6 @@ class AddressesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Addresses
         fields = ('id', 'userid', 'type', 'address', 'country', 'state', 'city', 'zipcode')
-        fields = ('id', 'userid', 'bookid', 'name')
 
 class BooksSerializer(serializers.ModelSerializer):
     class Meta:
