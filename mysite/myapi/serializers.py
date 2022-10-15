@@ -17,11 +17,9 @@ class AuthorsSerializer(serializers.ModelSerializer):
         fields = ('id', 'firstname', 'lastname', 'biography', 'publisher')
 
 class WishlistsSerializer(serializers.ModelSerializer):
-    userid = serializers.CharField(source='userid.firstname')
-    bookid = serializers.CharField(source='bookid.name')
     class Meta:
         model = Wishlists
-        fields = ('userid', 'bookid', 'name')
+        fields = ('id', 'userid', 'bookid', 'name')
              
 class AddressesSerializer(serializers.ModelSerializer):
     class Meta:
