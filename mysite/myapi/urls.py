@@ -3,6 +3,8 @@
 from django.urls import include, path
 from rest_framework import routers
 from . import views
+from myapi.views import TopSellingBooksViewSet
+from myapi.views import GenreListsViewSet
 
 router = routers.DefaultRouter()
 router.register(r'Wishlists', views.WishlistsViewSet, 'Wishlists')
@@ -20,6 +22,8 @@ router.register(r'Creditcards', views.CreditcardsViewSet, 'Creditcards')
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('Books/TopSellers/', TopSellingBooksViewSet.as_view()),
+    path('Books/Genre/', GenreListsViewSet.as_view()),
     path('', include(router.urls))
 ]
 
