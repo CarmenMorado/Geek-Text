@@ -1,4 +1,5 @@
 # views.py
+from rest_framework import filters
 from rest_framework import viewsets, generics
 
 from .serializers import WishlistsSerializer
@@ -119,4 +120,8 @@ class GenreListsViewSet(generics.ListAPIView):
 
             return queryset
 
-
+class ISBNListsViewSet(generics.ListAPIView):
+    serializer_class = BooksSerializer
+    queryset = Books.objects.all()
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['isbn']

@@ -5,6 +5,7 @@ from rest_framework import routers
 from . import views
 from myapi.views import TopSellingBooksViewSet
 from myapi.views import GenreListsViewSet
+from myapi.views import ISBNListsViewSet
 
 router = routers.DefaultRouter()
 router.register(r'Wishlists', views.WishlistsViewSet, 'Wishlists')
@@ -24,6 +25,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('Books/TopSellers/', TopSellingBooksViewSet.as_view()),
     path('Books/Genre/', GenreListsViewSet.as_view()),
+    path('Books/ISBN/', ISBNListsViewSet.as_view()),
     path('', include(router.urls))
 ]
 
