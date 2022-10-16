@@ -28,5 +28,3 @@ urlpatterns = [
     path('Books/ISBN/', ISBNListsViewSet.as_view()),
     path('', include(router.urls))
 ]
-
-    
