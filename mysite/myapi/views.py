@@ -11,6 +11,7 @@ from .serializers import AddressesSerializer
 from .serializers import AuthorsSerializer
 from .serializers import UsersSerializer
 from .serializers import CreditcardsSerializer
+from .serializers import ShoppingcartsSerializer
 
 from .models import Wishlists
 from .models import Books
@@ -21,6 +22,7 @@ from .models import Authors
 from .models import Addresses
 from .models import Users
 from .models import Creditcards
+from .models import Shoppingcarts
 
 from django.db import IntegrityError  # Import IntegrityError
 from rest_framework.exceptions import APIException  # Import APIException
@@ -54,7 +56,6 @@ class WishlistsViewSet(viewsets.ModelViewSet):
         try:
             return super().create(request, *args, **kwargs)
         except IntegrityError as exc:
-            # return render("template.html", {"message": e.message})
             raise APIException("Cannot insert a book twice into the same wishlist")
 
 
@@ -96,13 +97,17 @@ class UsersViewSet(viewsets.ModelViewSet):
 class CreditcardsViewSet(viewsets.ModelViewSet):
     queryset = Creditcards.objects.all().order_by('id')
     serializer_class = CreditcardsSerializer
+    
+    
+class ShoppingcartsViewSet(viewsets.ModelViewSet):
+    queryset = Shoppingcarts.objects.all().order_by('ordernumber')
+    serializer_class = ShoppingcartsSerializer
 
 
 class TopSellingBooksViewSet(generics.ListAPIView):
     queryset = Books.objects.all().order_by('-copiessold')[:10]
     serializer_class = BooksSerializer
-
-
+    
 
 class GenreListsViewSet(generics.ListAPIView):
     serializer_class = BooksSerializer
