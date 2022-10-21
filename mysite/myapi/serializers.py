@@ -1,5 +1,6 @@
 # serializers.py
 from rest_framework import serializers
+
 from .models import Bookratings
 from .models import Purchasedbooks
 from .models import Wishlists
@@ -9,6 +10,7 @@ from .models import Books
 from .models import Genres
 from .models import Users
 from .models import Creditcards
+from .models import Shoppingcarts
 
 
 class AuthorsSerializer(serializers.ModelSerializer):
@@ -55,3 +57,8 @@ class CreditcardsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Creditcards
         fields = '__all__'
+        
+class ShoppingcartsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Shoppingcarts
+        fields = ('ordernumber', 'userid', 'bookid')
