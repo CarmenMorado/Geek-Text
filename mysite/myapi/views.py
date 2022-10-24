@@ -29,16 +29,31 @@ from rest_framework.exceptions import APIException  # Import APIException
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
-
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 class WishlistsViewSet(viewsets.ModelViewSet):
     queryset = Wishlists.objects.all().order_by('id')
     serializer_class = WishlistsSerializer
+    
+    @receiver(post_delete, sender=Wishlists)
+    def moveToShoppingCart(sender, instance, **kwargs):
+        bookid = Books.objects.get(id = instance.bookid.id)
+        userid = Users.objects.get(id = instance.userid.id)
+        instanceShopping = Shoppingcarts(userid = userid, bookid = bookid)
+        instanceShopping.save(force_insert=True)
 
     def list(self, request):
         queryset = Wishlists.objects.all().order_by('id')
         userid = self.request.query_params.get('userid')
         name = self.request.query_params.get('name')
+        
+        if not Wishlists.objects.filter(userid = userid).exists() and userid:
+            return Response("The userid does not exist.", status=status.HTTP_404_NOT_FOUND)
+        
+        if not Wishlists.objects.filter(name = name).exists() and name:
+            return Response("User " + userid + " does not have a wishlist with that name.", status=status.HTTP_404_NOT_FOUND)
+        
         if userid and name:
             queryset = queryset.filter(userid=userid)
             queryset = queryset.filter(name=name)
@@ -46,11 +61,6 @@ class WishlistsViewSet(viewsets.ModelViewSet):
             return Response({"Books": list(books)})
         queryset = queryset.values('id', 'userid', 'userid__firstname', 'bookid', 'bookid__name', 'name')
         return Response({"Wishlist Results": list(queryset)})
-
-    def delete(self, request, pk):
-        instance = Wishlists.objects.get(pk)
-        instance.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def create(self, request, *args, **kwargs):
         try:
