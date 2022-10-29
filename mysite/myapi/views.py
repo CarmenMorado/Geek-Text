@@ -29,6 +29,7 @@ from rest_framework.exceptions import APIException  # Import APIException
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
+from myapi.pagination import BookListPagination
 
 
 class WishlistsViewSet(viewsets.ModelViewSet):
@@ -72,6 +73,7 @@ class AuthorsViewSet(viewsets.ModelViewSet):
 class BooksViewSet(viewsets.ModelViewSet):
     queryset = Books.objects.all().order_by('name')
     serializer_class = BooksSerializer
+    pagination_class = BookListPagination
 
 
 class GenresViewSet(viewsets.ModelViewSet):
