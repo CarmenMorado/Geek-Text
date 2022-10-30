@@ -5,7 +5,9 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models import Avg
 
 
 class Addresses(models.Model):
@@ -35,13 +37,22 @@ class Authors(models.Model):
         db_table = 'Authors'
 
 
-class Bookratings(models.Model):
-    userid = models.OneToOneField('Users', models.DO_NOTHING, db_column='UserID', primary_key=True)  # Field name made lowercase.
-    bookid = models.ForeignKey('Books', models.DO_NOTHING, db_column='BookID')  # Field name made lowercase.
+class AverageRating(models.Model):
+    id = models.AutoField(db_column='ID', primary_key=True)
+    bookid = models.ForeignKey('Books', models.DO_NOTHING, db_column='BookID')
     rating = models.IntegerField()
-    ratingtimestamp = models.TextField(db_column='ratingTimeStamp')  # Field name made lowercase. This field type is a guess.
+
+
+class Bookratings(models.Model):
+    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    userid = models.ForeignKey('Users', models.DO_NOTHING, db_column='UserID')
+    bookid = models.ForeignKey('Books', models.DO_NOTHING, db_column='BookID')  # Field name made lowercase.
+    rating = models.SmallIntegerField(default=0, validators=[MaxValueValidator(5), MinValueValidator(1)])
+    ratingtimestamp = models.TextField(
+        db_column='ratingTimeStamp')  # Field name made lowercase. This field type is a guess.
     comment = models.TextField()
-    commenttimestamp = models.TextField(db_column='commentTimeStamp')  # Field name made lowercase. This field type is a guess.
+    commenttimestamp = models.TextField(
+        db_column='commentTimeStamp')  # Field name made lowercase. This field type is a guess.
 
     class Meta:
         managed = False
@@ -128,9 +139,10 @@ class Wishlists(models.Model):
     class Meta:
         managed = False
         db_table = 'WishLists'
-        constraints = [models.UniqueConstraint(fields = ['bookid', 'userid', 'name'], name = 'constraint_userId_bookId_name')]
-        
- 
+        constraints = [
+            models.UniqueConstraint(fields=['bookid', 'userid', 'name'], name='constraint_userId_bookId_name')]
+
+
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
 
