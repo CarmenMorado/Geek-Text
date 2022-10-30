@@ -132,3 +132,25 @@ class ISBNListsViewSet(generics.ListAPIView):
     queryset = Books.objects.all()
     filter_backends = [filters.SearchFilter]
     search_fields = ['isbn']
+
+    
+class RatingListsViewSet(generics.ListAPIView):
+    serializer_class = BooksSerializer
+
+    def get_queryset(self):
+        queryset = Books.objects.all()
+
+        try:
+            user_input = self.request.query_params.get('rating')
+        except AttributeError as abc:
+            return Books.objects.none()
+
+        if user_input is not None:
+
+            try:
+                queryset = queryset.filter(bookratings__rating__gte=user_input).all()
+
+            except ValueError as abc:
+                raise APIException("Rating should be a number")
+
+            return queryset
