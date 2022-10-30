@@ -1,4 +1,5 @@
 # views.py
+from rest_framework import filters
 from rest_framework import viewsets, generics
 
 from .serializers import WishlistsSerializer
@@ -10,6 +11,7 @@ from .serializers import AddressesSerializer
 from .serializers import AuthorsSerializer
 from .serializers import UsersSerializer
 from .serializers import CreditcardsSerializer
+from .serializers import ShoppingcartsSerializer
 
 from .models import Wishlists
 from .models import Books
@@ -20,14 +22,14 @@ from .models import Authors
 from .models import Addresses
 from .models import Users
 from .models import Creditcards
+from .models import Shoppingcarts
 
-from django.db.models import Q
-from django.db.models import Avg
 from django.db import IntegrityError  # Import IntegrityError
 from rest_framework.exceptions import APIException  # Import APIException
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
+from myapi.pagination import BookListPagination
 
 
 class WishlistsViewSet(viewsets.ModelViewSet):
@@ -55,7 +57,6 @@ class WishlistsViewSet(viewsets.ModelViewSet):
         try:
             return super().create(request, *args, **kwargs)
         except IntegrityError as exc:
-            # return render("template.html", {"message": e.message})
             raise APIException("Cannot insert a book twice into the same wishlist")
 
 
@@ -72,6 +73,7 @@ class AuthorsViewSet(viewsets.ModelViewSet):
 class BooksViewSet(viewsets.ModelViewSet):
     queryset = Books.objects.all().order_by('name')
     serializer_class = BooksSerializer
+    pagination_class = BookListPagination
 
 
 class GenresViewSet(viewsets.ModelViewSet):
@@ -80,7 +82,7 @@ class GenresViewSet(viewsets.ModelViewSet):
 
 
 class BookratingsViewSet(viewsets.ModelViewSet):
-    queryset = Bookratings.objects.all().order_by('-rating', 'ratingtimestamp', 'comment', 'commenttimestamp')
+    queryset = Bookratings.objects.all().order_by('rating', 'ratingtimestamp', 'comment', 'commenttimestamp')
     serializer_class = BookratingsSerializer
 
 
@@ -97,35 +99,17 @@ class UsersViewSet(viewsets.ModelViewSet):
 class CreditcardsViewSet(viewsets.ModelViewSet):
     queryset = Creditcards.objects.all().order_by('id')
     serializer_class = CreditcardsSerializer
+    
+    
+class ShoppingcartsViewSet(viewsets.ModelViewSet):
+    queryset = Shoppingcarts.objects.all().order_by('ordernumber')
+    serializer_class = ShoppingcartsSerializer
 
 
 class TopSellingBooksViewSet(generics.ListAPIView):
     queryset = Books.objects.all().order_by('-copiessold')[:10]
     serializer_class = BooksSerializer
-
-
-class TopRatedBooksViewSet(generics.ListAPIView):
-    queryset = Bookratings.objects.all().order_by('-rating')
-    serializer_class = BookratingsSerializer
-
-
-class AverageRatingViewSet(generics.ListAPIView):
-    serializer_class = BookratingsSerializer
-
-    def get_queryset(self):
-        queryset = Bookratings.objects.all()
-
-
-        try:
-            user_input = self.request.query_params.get('rating')
-        except AttributeError as abc:
-            return Bookratings.objects.none()
-
-        if user_input is not None:
-            queryset = queryset.filter(bookid=user_input).aggregate(Books_average=Avg('rating'))
-
-            return queryset
-
+    
 
 class GenreListsViewSet(generics.ListAPIView):
     serializer_class = BooksSerializer
@@ -142,3 +126,9 @@ class GenreListsViewSet(generics.ListAPIView):
             queryset = queryset.filter(genreid__genre=user_input)
 
             return queryset
+
+class ISBNListsViewSet(generics.ListAPIView):
+    serializer_class = BooksSerializer
+    queryset = Books.objects.all()
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['isbn']

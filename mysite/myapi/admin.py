@@ -9,7 +9,7 @@ from .models import Addresses
 from .models import Authors
 from .models import Users
 from .models import Creditcards
-from. models import AverageRating
+from .models import Shoppingcarts
 
 admin.site.register(Wishlists)
 admin.site.register(Books)
@@ -20,5 +20,5 @@ admin.site.register(Addresses)
 admin.site.register(Authors)
 admin.site.register(Users)
 admin.site.register(Creditcards)
-admin.site.register(AverageRating)
+admin.site.register(Shoppingcarts)
 
