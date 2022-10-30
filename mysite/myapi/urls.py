@@ -6,7 +6,6 @@ from . import views
 from myapi.views import TopSellingBooksViewSet
 from myapi.views import GenreListsViewSet
 from myapi.views import ISBNListsViewSet
-from myapi.views import RatingListsViewSet
 
 router = routers.DefaultRouter()
 router.register(r'Wishlists', views.WishlistsViewSet, 'Wishlists')
@@ -28,6 +27,5 @@ urlpatterns = [
     path('Books/TopSellers/', TopSellingBooksViewSet.as_view()),
     path('Books/Genre/', GenreListsViewSet.as_view()),
     path('Books/ISBN/', ISBNListsViewSet.as_view()),
-    path('Books/Rating/', RatingListsViewSet.as_view()),
     path('', include(router.urls))
 ]
