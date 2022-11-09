@@ -170,3 +170,20 @@ class RatingListsViewSet(generics.ListAPIView):
                 raise APIException("Rating should be a number")
 
             return queryset
+        
+        
+class BookByAuthorListsViewSet(generics.ListAPIView):
+    serializer_class = BooksSerializer
+    def get_queryset(self):
+        queryset = Books.objects.all()
+        try:
+            user_input = self.request.query_params.get('name').title().replace("-", " ")
+            chunks = user_input.split()
+        except AttributeError as abc:
+            return Books.objects.none()
+        if (user_input is not None and len(chunks) > 1):
+            queryset = queryset.filter(authorid__firstname=chunks[0])
+            queryset = queryset.filter(authorid__lastname=chunks[1])
+        elif (user_input is not None):
+             queryset = queryset.filter(authorid__firstname=user_input)
+        return queryset
