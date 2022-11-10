@@ -182,8 +182,8 @@ class BookByAuthorListsViewSet(generics.ListAPIView):
         except AttributeError as abc:
             return Books.objects.none()
         if (user_input is not None and len(chunks) > 1):
-            queryset = queryset.filter(authorid__firstname=chunks[0])
-            queryset = queryset.filter(authorid__lastname=chunks[1])
+            queryset = queryset.filter(authorid__firstname__icontains=chunks[0])
+            queryset = queryset.filter(authorid__lastname__icontains=chunks[1])
         elif (user_input is not None):
-             queryset = queryset.filter(authorid__firstname=user_input)
+            queryset = queryset.filter(authorid__firstname__icontains=user_input)
         return queryset
