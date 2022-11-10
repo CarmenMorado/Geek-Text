@@ -113,7 +113,8 @@ class Users(models.Model):
     password = models.TextField()
     firstname = models.TextField(db_column='firstName', blank=True, null=True)  # Field name made lowercase.
     lastname = models.TextField(db_column='lastName', blank=True, null=True)  # Field name made lowercase.
-
+    email = models.TextField(db_column='email', unique=True)  # Field name made lowercase.
+    
     class Meta:
         managed = False
         db_table = 'Users'
@@ -124,7 +125,7 @@ class Wishlists(models.Model):
     userid = models.ForeignKey(Users, models.DO_NOTHING, db_column='UserID')  # Field name made lowercase.
     bookid = models.ForeignKey(Books, models.DO_NOTHING, db_column='BookID')  # Field name made lowercase.
     name = models.TextField()
-
+    
     class Meta:
         managed = False
         db_table = 'WishLists'
