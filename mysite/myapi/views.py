@@ -112,11 +112,49 @@ class UsersViewSet(viewsets.ModelViewSet):
     queryset = Users.objects.all().order_by('id')
     serializer_class = UsersSerializer
 
+    def list(self, request):
+        queryset = Users.objects.all().order_by('id')
+        queryset = queryset.values('id', 'username', 'password', 'firstname', 'lastname', 'addressid' , 'email',
+                                   'addressid__address', 'addressid__country', 'addressid__state', 'addressid__city', 'addressid__zipcode')
+        return Response({"User": list(queryset)})
 
+class UserSearchViewSet(generics.ListAPIView):
+    queryset = Addresses.objects.all()
+    serializer_class = AddressesSerializer
+
+    def list(self, request):
+        queryset =  Addresses.objects.all()
+        userinput = self.request.query_params.get('username')
+        if userinput is not None and '@' in userinput:
+            queryset = queryset.filter(userid__email=userinput)
+            queryset = queryset.values('userid__username', 'userid__password', 'userid__firstname', 'userid__lastname', 'userid__email', 'address', 'country','state', 'city', 'zipcode',)
+        elif userinput is not None and '@' not in userinput:
+            queryset = queryset.filter(userid__username=userinput)
+            queryset = queryset.values('userid__username', 'userid__password', 'userid__firstname', 'userid__lastname',
+                                       'userid__email', 'address', 'country', 'state', 'city', 'zipcode', )
+        return Response({"User": list(queryset)})
+    
 class CreditcardsViewSet(viewsets.ModelViewSet):
     queryset = Creditcards.objects.all().order_by('id')
     serializer_class = CreditcardsSerializer
     
+class creditcardSearchViewSet(generics.ListAPIView):
+    queryset = Creditcards.objects.all()
+    serializer_class = CreditcardsSerializer
+
+    def list(self, request):
+        queryset = Creditcards.objects.all()
+        userinput = self.request.query_params.get('username')
+        if userinput is not None and '@' in userinput:
+            queryset = queryset.filter(userid__email=userinput)
+            queryset = queryset.values('userid__username', 'userid__password', 'userid__firstname', 'userid__lastname',
+                                   'userid__email', 'type', 'number', 'expirationdate', 'cvv')
+        elif userinput is not None and '@' not in userinput:
+            queryset = queryset.filter(userid__username=userinput)
+            queryset = queryset.values('userid__username', 'userid__password', 'userid__firstname', 'userid__lastname',
+                                       'userid__email', 'type', 'number', 'expirationdate', 'cvv')
+        return Response({"User": list(queryset)})
+ 
     
 class ShoppingcartsViewSet(viewsets.ModelViewSet):
     queryset = Shoppingcarts.objects.all().order_by('ordernumber')
