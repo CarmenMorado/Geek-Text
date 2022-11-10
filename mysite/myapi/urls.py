@@ -31,5 +31,7 @@ urlpatterns = [
     path('Books/ISBN/', ISBNListsViewSet.as_view()),
     path('Books/Author/', BookByAuthorListsViewSet.as_view()),
     path('Books/Rating/', RatingListsViewSet.as_view()),
+    path('Users/address/', UserSearchViewSet.as_view()),
+    path('Users/creditcard/', creditcardSearchViewSet.as_view()),
     path('', include(router.urls))
 ]
