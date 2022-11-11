@@ -8,6 +8,8 @@ from myapi.views import GenreListsViewSet
 from myapi.views import ISBNListsViewSet
 from myapi.views import RatingListsViewSet
 from myapi.views import BookByAuthorListsViewSet
+from myapi.views import TopRatedBooksViewSet
+from myapi.views import AverageRatingViewSet
 
 router = routers.DefaultRouter()
 router.register(r'Wishlists', views.WishlistsViewSet, 'Wishlists')
@@ -28,6 +30,8 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('Books/TopSellers/', TopSellingBooksViewSet.as_view()),
     path('Books/Genre/', GenreListsViewSet.as_view()),
+    path('Bookratings/TopRated/', TopRatedBooksViewSet.as_view()),
+    path('Bookratings/AverageRating/', AverageRatingViewSet.as_view()),
     path('Books/ISBN/', ISBNListsViewSet.as_view()),
     path('Books/Author/', BookByAuthorListsViewSet.as_view()),
     path('Books/Rating/', RatingListsViewSet.as_view()),
