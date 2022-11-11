@@ -1,4 +1,5 @@
 # serializers.py
+from django.db.models import Avg
 from rest_framework import serializers
 
 from .models import Bookratings
@@ -37,11 +38,44 @@ class GenresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genres
         fields = ('id', 'genre')
-        
-class BookratingsSerializer(serializers.ModelSerializer):
+
+class AvgBookRatingSerializer(serializers.ModelSerializer):
+    average_rating = serializers.SerializerMethodField()
+
     class Meta:
         model = Bookratings
-        fields = ('userid', 'bookid', 'rating','ratingtimestamp', 'comment', 'commenttimestamp')
+        fields = ("id", "average_rating")
+
+    def get_average_rating(self, obj):
+        # get the average rating for the book by the book id
+        average_rating = Bookratings.objects.filter(bookid=obj.id).aggregate(
+            Avg("rating")
+        )["rating__avg"]
+        # round the average rating to 2 decimal places
+        if average_rating is not None:
+            return round(average_rating, 2)
+        else:
+            return "0"        
+
+
+class BookratingsSerializer(serializers.ModelSerializer):
+    avg_rating = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Bookratings
+        fields = (
+            "userid",
+            "bookid",
+            "rating",
+            "ratingtimestamp",
+            "comment",
+            "commenttimestamp",
+            "avg_rating",
+        )
+
+    def get_avg_rating(self, obj):
+        # Get the average rating for the book
+        return Bookratings.objects.filter(bookid=obj.bookid).aggregate(Avg("rating"))
 
 class PurchasedbooksSerializer(serializers.ModelSerializer):
     class Meta:

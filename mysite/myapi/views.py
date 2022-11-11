@@ -3,6 +3,7 @@ from rest_framework import filters
 from rest_framework import viewsets, generics
 
 from .serializers import WishlistsSerializer
+from .serializers import AvgBookRatingSerializer
 from .serializers import BooksSerializer
 from .serializers import GenresSerializer
 from .serializers import PurchasedbooksSerializer
@@ -99,7 +100,7 @@ class GenresViewSet(viewsets.ModelViewSet):
 
 
 class BookratingsViewSet(viewsets.ModelViewSet):
-    queryset = Bookratings.objects.all().order_by('rating', 'ratingtimestamp', 'comment', 'commenttimestamp')
+    queryset = Bookratings.objects.all().order_by('rating', 'ratingtimestamp', 'comment', 'commenttimestamp', 'bookid')
     serializer_class = BookratingsSerializer
 
 
@@ -164,9 +165,21 @@ class ShoppingcartsViewSet(viewsets.ModelViewSet):
 class TopSellingBooksViewSet(generics.ListAPIView):
     queryset = Books.objects.all().order_by('-copiessold')[:10]
     serializer_class = BooksSerializer
-    
 
-class GenreListsViewSet(generics.ListAPIView):
+    
+class TopRatedBooksViewSet(generics.ListAPIView):
+    queryset = Bookratings.objects.all().order_by('-rating')
+    serializer_class = BookratingsSerializer
+
+
+class AverageRatingViewSet(generics.ListAPIView):
+    serializer_class = AvgBookRatingSerializer
+
+    def get_queryset(self):
+        return Books.objects.all()
+
+
+ class GenreListsViewSet(generics.ListAPIView):
     serializer_class = BooksSerializer
 
     def get_queryset(self):
