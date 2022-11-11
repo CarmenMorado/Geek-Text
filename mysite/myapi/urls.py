@@ -10,6 +10,8 @@ from myapi.views import RatingListsViewSet
 from myapi.views import BookByAuthorListsViewSet
 from myapi.views import TopRatedBooksViewSet
 from myapi.views import AverageRatingViewSet
+from myapi.views import UserSearchViewSet
+from myapi.views import creditcardSearchViewSet
 
 router = routers.DefaultRouter()
 router.register(r'Wishlists', views.WishlistsViewSet, 'Wishlists')
