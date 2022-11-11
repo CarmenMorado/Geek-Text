@@ -179,7 +179,7 @@ class AverageRatingViewSet(generics.ListAPIView):
         return Books.objects.all()
 
 
- class GenreListsViewSet(generics.ListAPIView):
+class GenreListsViewSet(generics.ListAPIView):
     serializer_class = BooksSerializer
 
     def get_queryset(self):
