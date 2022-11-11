@@ -110,13 +110,13 @@ class PurchasedbooksViewSet(viewsets.ModelViewSet):
 
 
 class UsersViewSet(viewsets.ModelViewSet):
-    queryset = Users.objects.all().order_by('id')
-    serializer_class = UsersSerializer
+    queryset = Addresses.objects.all().order_by('id')
+    serializer_class = AddressesSerializer
 
     def list(self, request):
-        queryset = Users.objects.all().order_by('id')
-        queryset = queryset.values('id', 'username', 'password', 'firstname', 'lastname', 'addressid' , 'email',
-                                   'addressid__address', 'addressid__country', 'addressid__state', 'addressid__city', 'addressid__zipcode')
+        queryset = Addresses.objects.all().order_by('id')
+        queryset = queryset.values('userid__username', 'userid__password', 'userid__firstname', 'userid__lastname',
+                                   'userid__email', 'address', 'country', 'state', 'city', 'zipcode', )
         return Response({"User": list(queryset)})
 
 class UserSearchViewSet(generics.ListAPIView):
