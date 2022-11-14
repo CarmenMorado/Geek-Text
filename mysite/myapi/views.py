@@ -25,8 +25,8 @@ from .models import Users
 from .models import Creditcards
 from .models import Shoppingcarts
 
-from django.db import IntegrityError  # Import IntegrityError
-from rest_framework.exceptions import APIException  # Import APIException
+from django.db import IntegrityError  
+from rest_framework.exceptions import APIException  
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
@@ -35,46 +35,49 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
 
-class WishlistsViewSet(viewsets.ModelViewSet):
-    queryset = Wishlists.objects.all().order_by('id')
-    serializer_class = WishlistsSerializer
+class WishlistsViewSet(viewsets.ModelViewSet): #ModelViewSet is a class that includes behind-the-scenes implementions for REST calls like GET, POST, and DELETE
+    queryset = Wishlists.objects.all().order_by('id') #order the wishlist objects by id
+    serializer_class = WishlistsSerializer #the serializer class that will be used for validating and deserializing input, and for serializing output
     
-    @receiver(post_delete, sender=Wishlists)
-    def moveToShoppingCart(sender, instance, **kwargs):
-        bookid = Books.objects.get(id = instance.bookid.id)
-        userid = Users.objects.get(id = instance.userid.id)
-        instanceShopping = Shoppingcarts(userid = userid, bookid = bookid)
-        instanceShopping.save(force_insert=True)
+    @receiver(post_delete, sender=Wishlists) #calls the func if the user does a REST DELETE call
+    def moveToShoppingCart(sender, instance, **kwargs): #function to remove the book from the wishlist and move it to the shopping cart
+        bookid = Books.objects.get(id = instance.bookid.id) #get the bookid of the instance to be deleted
+        userid = Users.objects.get(id = instance.userid.id) #get the userid of the instance to be deleted
+        instanceShopping = Shoppingcarts(userid = userid, bookid = bookid) #create a Shoppingcart object with the userid and bookid of the deleted instance
+        instanceShopping.save(force_insert=True) #save the new instance of Shoppingcart in the database
     
     def list(self, request):
-        queryset = Wishlists.objects.all().order_by('id')
-        userid = self.request.query_params.get('userid')
-        name = self.request.query_params.get('name')
+        queryset = Wishlists.objects.all().order_by('id') #order the wishlist objects by id
+        userid = self.request.query_params.get('userid') #get the userid inputted from the query parameters
+        name = self.request.query_params.get('name') #get the name of the wishlist inputted from the query parameters
         
-        if userid and not name:
+        if userid and not name: #if the userid has been inputted in the query params but the name has been left blank
             return Response("Please enter the name of the wishlist you wish to see.", status=status.HTTP_404_NOT_FOUND)
             
-        if not userid and name:
+        if not userid and name: #if the name has been inputted in the query params but the userid has been left blank
             return Response("Please enter a userid.", status=status.HTTP_404_NOT_FOUND)
         
-        if not Wishlists.objects.filter(userid = userid).exists() and userid:
+        if not Wishlists.objects.filter(userid = userid).exists() and userid: #if a userid has been inputted in the query params that doesn't exist
             return Response("The userid does not exist.", status=status.HTTP_404_NOT_FOUND)
         
-        if not Wishlists.objects.filter(name = name).exists() and name:
+        if not Wishlists.objects.filter(name = name).exists() and name: #if the name of the wishlist inputted in the query params does not belong to the user
             return Response("User " + userid + " does not have a wishlist with that name.", status=status.HTTP_404_NOT_FOUND)
         
-        if userid and name:
-            queryset = queryset.filter(userid=userid)
-            queryset = queryset.filter(name=name)
-            books = queryset.values('bookid', 'bookid__name')
+        if userid and name: #if both the userid and name have been inputted successfully as query params without prior errors
+            queryset = queryset.filter(userid=userid) #will return only the db rows containing the userid entered
+            queryset = queryset.filter(name=name) #will return only the db rows containing the both the userid and name entered
+            books = queryset.values('bookid', 'bookid__name') #will return only the db columns of the filtered queryset with the bookid and the name of the book
             return Response({"Books": list(books)})
-        queryset = queryset.values('id', 'userid', 'userid__firstname', 'bookid', 'bookid__name', 'name')
+        #The double underscores signify retrieving a value from another table by the foreign key
+        queryset = queryset.values('id', 'userid', 'userid__firstname', 'bookid', 'bookid__name', 'name') #queryset that will be returned if query parameters have
+                                                                                                          #not been inputted
         return Response({"Wishlist Results": list(queryset)})
 
     def create(self, request, *args, **kwargs):
         try:
             return super().create(request, *args, **kwargs)
-        except IntegrityError as exc:
+        #Integrity error due to Unique Constraint in models.py
+        except IntegrityError as exc: #Error will be triggered if user inputs the same values for userid, bookid, and name twice.
             raise APIException("Cannot insert a book twice into the same wishlist")
 
 
