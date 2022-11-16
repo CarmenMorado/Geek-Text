@@ -111,7 +111,7 @@ class PurchasedbooksViewSet(viewsets.ModelViewSet):
     queryset = Purchasedbooks.objects.all().order_by('orderhistory', 'userid', 'bookid')
     serializer_class = PurchasedbooksSerializer
 
-
+#viewset for users that will return all info of all users onto a single queryset.
 class UsersViewSet(viewsets.ModelViewSet):
     queryset = Addresses.objects.all().order_by('id')
     serializer_class = AddressesSerializer
@@ -121,7 +121,8 @@ class UsersViewSet(viewsets.ModelViewSet):
         queryset = queryset.values('userid__username', 'userid__password', 'userid__firstname', 'userid__lastname',
                                    'userid__email', 'address', 'country', 'state', 'city', 'zipcode', )
         return Response({"User": list(queryset)})
-
+    
+#viewset that will search for a specific user using a URL based on either either username or email.
 class UserSearchViewSet(generics.ListAPIView):
     queryset = Addresses.objects.all()
     serializer_class = AddressesSerializer
@@ -137,11 +138,13 @@ class UserSearchViewSet(generics.ListAPIView):
             queryset = queryset.values('userid__username', 'userid__password', 'userid__firstname', 'userid__lastname',
                                        'userid__email', 'address', 'country', 'state', 'city', 'zipcode', )
         return Response({"User": list(queryset)})
-    
+
+#viewset that will return all credit card info for all users on a single queryset. 
 class CreditcardsViewSet(viewsets.ModelViewSet):
     queryset = Creditcards.objects.all().order_by('id')
     serializer_class = CreditcardsSerializer
-    
+
+#viewset that will search for a specific user's credit card info   
 class creditcardSearchViewSet(generics.ListAPIView):
     queryset = Creditcards.objects.all()
     serializer_class = CreditcardsSerializer
