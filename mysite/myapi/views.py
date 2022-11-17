@@ -35,7 +35,7 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
 
-class WishlistsViewSet(viewsets.ModelViewSet): #ModelViewSet is a class that includes behind-the-scenes implementions for REST calls like GET, POST, and DELETE
+class WishlistsViewSet(viewsets.ModelViewSet): #ModelViewSet is a class that includes behind-the-scenes implementations for REST calls like GET, POST, and DELETE
     queryset = Wishlists.objects.all().order_by('id') #order the wishlist objects by id
     serializer_class = WishlistsSerializer #the serializer class that will be used for validating and deserializing input, and for serializing output
     
