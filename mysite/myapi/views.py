@@ -39,12 +39,13 @@ class WishlistsViewSet(viewsets.ModelViewSet): #ModelViewSet is a class that inc
     queryset = Wishlists.objects.all().order_by('id') #order the wishlist objects by id
     serializer_class = WishlistsSerializer #the serializer class that will be used for validating and deserializing input, and for serializing output
     
+    #using Django's built-in signals to let user code get notified of certain actions
     @receiver(post_delete, sender=Wishlists) #calls the func if the user does a REST DELETE call
     def moveToShoppingCart(sender, instance, **kwargs): #function to remove the book from the wishlist and move it to the shopping cart
-        bookid = Books.objects.get(id = instance.bookid.id) #get the bookid of the instance to be deleted
-        userid = Users.objects.get(id = instance.userid.id) #get the userid of the instance to be deleted
+        bookid = Books.objects.get(id = instance.bookid.id) #get the bookid of the deleted instance
+        userid = Users.objects.get(id = instance.userid.id) #get the userid of the deleted instance 
         instanceShopping = Shoppingcarts(userid = userid, bookid = bookid) #create a Shoppingcart object with the userid and bookid of the deleted instance
-        instanceShopping.save(force_insert=True) #save the new instance of Shoppingcart in the database
+        instanceShopping.save(force_insert=True) #save the new Shoppingcart instance in the database
     
     def list(self, request): #func to handle query parameters or edit the response whenever a user does a regular REST GET call 
         queryset = Wishlists.objects.all().order_by('id') #order the wishlist objects by id
@@ -65,7 +66,7 @@ class WishlistsViewSet(viewsets.ModelViewSet): #ModelViewSet is a class that inc
         
         if userid and name: #if both the userid and name have been inputted successfully as query params without prior errors
             queryset = queryset.filter(userid=userid) #will return only the db rows containing the userid entered
-            queryset = queryset.filter(name=name) #will return only the db rows containing the both the userid and name entered
+            queryset = queryset.filter(name=name) #will return only the db rows containing both the userid and name entered
             books = queryset.values('bookid', 'bookid__name') #will return only the db columns of the filtered queryset with the bookid and the name of the book
             return Response({"Books": list(books)})
         #The double underscores signify retrieving a value from another table by the foreign key
