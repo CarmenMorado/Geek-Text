@@ -46,7 +46,7 @@ class WishlistsViewSet(viewsets.ModelViewSet): #ModelViewSet is a class that inc
         instanceShopping = Shoppingcarts(userid = userid, bookid = bookid) #create a Shoppingcart object with the userid and bookid of the deleted instance
         instanceShopping.save(force_insert=True) #save the new instance of Shoppingcart in the database
     
-    def list(self, request):
+    def list(self, request): #func to handle query parameters or edit the response whenever a user does a regular REST GET call 
         queryset = Wishlists.objects.all().order_by('id') #order the wishlist objects by id
         userid = self.request.query_params.get('userid') #get the userid inputted from the query parameters
         name = self.request.query_params.get('name') #get the name of the wishlist inputted from the query parameters
@@ -73,7 +73,7 @@ class WishlistsViewSet(viewsets.ModelViewSet): #ModelViewSet is a class that inc
                                                                                                           #not been inputted
         return Response({"Wishlist Results": list(queryset)})
 
-    def create(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs): #func to catch a custom error
         try:
             return super().create(request, *args, **kwargs)
         #Integrity error due to Unique Constraint in models.py
