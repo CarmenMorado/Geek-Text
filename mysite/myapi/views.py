@@ -69,6 +69,7 @@ class WishlistsViewSet(viewsets.ModelViewSet): #ModelViewSet is a class that inc
             queryset = queryset.filter(name=name) #will return only the db rows containing both the userid and name entered
             books = queryset.values('bookid', 'bookid__name') #will return only the db columns of the filtered queryset with the bookid and the name of the book
             return Response({"Books": list(books)})
+        
         #The double underscores signify retrieving a value from another table by the foreign key
         queryset = queryset.values('id', 'userid', 'userid__firstname', 'bookid', 'bookid__name', 'name') #queryset that will be returned if query parameters have
                                                                                                           #not been inputted
