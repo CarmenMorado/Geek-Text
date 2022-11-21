@@ -212,7 +212,7 @@ class ISBNListsViewSet(generics.ListAPIView):
 class RatingListsViewSet(generics.ListAPIView):
     serializer_class = BooksSerializer
 
-    def get_queryset(self):
+    def get_queryset(self, request):
         queryset = Books.objects.all()
 
         try:
@@ -224,11 +224,12 @@ class RatingListsViewSet(generics.ListAPIView):
 
             try:
                 queryset = queryset.filter(bookratings__rating__gte=user_input).all()
+                queryset = queryset.values('isbn', 'name', 'authorid__firstname', 'authorid__lastname', 'bookratings__rating')
 
             except ValueError as abc:
                 raise APIException("Rating should be a number")
 
-            return queryset
+            return Response({"Book": list(queryset)})
         
         
 class BookByAuthorListsViewSet(generics.ListAPIView):
