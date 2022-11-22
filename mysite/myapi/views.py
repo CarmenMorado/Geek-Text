@@ -93,15 +93,17 @@ class AuthorsViewSet(viewsets.ModelViewSet):
     serializer_class = AuthorsSerializer
 
 
+# view that returns list of books
 class BooksViewSet(viewsets.ModelViewSet):
-    queryset = Books.objects.all().order_by('name')
-    serializer_class = BooksSerializer
-    pagination_class = BookListPagination
+    queryset = Books.objects.all().order_by('name') # selects all books and orders by name
+    serializer_class = BooksSerializer # selects the serializer that is used
+    pagination_class = BookListPagination # selects the pagination class that is used
 
 
+# view that returns list of genres
 class GenresViewSet(viewsets.ModelViewSet):
-    queryset = Genres.objects.all().order_by('genre')
-    serializer_class = GenresSerializer
+    queryset = Genres.objects.all().order_by('genre') # selects all genres and orders by genre
+    serializer_class = GenresSerializer # selects serializer that is used
 
 
 class BookratingsViewSet(viewsets.ModelViewSet):
@@ -170,9 +172,10 @@ class ShoppingcartsViewSet(viewsets.ModelViewSet):
     serializer_class = ShoppingcartsSerializer
 
 
+# view that returns the top 10 best selling books
 class TopSellingBooksViewSet(generics.ListAPIView):
-    queryset = Books.objects.all().order_by('-copiessold')[:10]
-    serializer_class = BooksSerializer
+    queryset = Books.objects.all().order_by('-copiessold')[:10] # selects all books and returns the the first 10 books ordered by copies sold in descending order
+    serializer_class = BooksSerializer # selects the serializer that is used
 
     
 class TopRatedBooksViewSet(generics.ListAPIView):
@@ -187,21 +190,23 @@ class AverageRatingViewSet(generics.ListAPIView):
         return Books.objects.all()
 
 
+# view wit genre query parameters
 class GenreListsViewSet(generics.ListAPIView):
-    serializer_class = BooksSerializer
+    serializer_class = BooksSerializer # selects the serializer that is used
 
+    # methody to get queryset
     def get_queryset(self):
-        queryset = Books.objects.all()
+        queryset = Books.objects.all() # selects all book
 
         try:
-            user_input = self.request.query_params.get('genre').title().replace("-", " ")
+            user_input = self.request.query_params.get('genre').title().replace("-", " ") # selects users input using from url 'genre='
         except AttributeError as abc:
-            return Books.objects.none()
+            return Books.objects.none() # returns an empty set when an arrtibute error is thrown
 
         if user_input is not None:
-            queryset = queryset.filter(genreid__genre=user_input)
+            queryset = queryset.filter(genreid__genre=user_input) # selects books based on the genre that was entered by the user 
 
-            return queryset
+            return queryset # returns the queryset
 
 class ISBNListsViewSet(generics.ListAPIView):
     serializer_class = BooksSerializer
@@ -209,26 +214,28 @@ class ISBNListsViewSet(generics.ListAPIView):
     filter_backends = [filters.SearchFilter]
     search_fields = ['isbn']
 
-class RatingListsViewSet(generics.ListAPIView):
-    serializer_class = BooksSerializer
+# view to return books based on a certain number and higher
+class RatingListsViewSet(generics.ListAPIView): 
+    serializer_class = BooksSerializer # selects the serializer
 
-    def get_queryset(self):
-        queryset = Books.objects.all()
+    def get_queryset(self, request):
+        queryset = Books.objects.all() # sets the queryset to all books
 
         try:
-            user_input = self.request.query_params.get('rating')
+            user_input = self.request.query_params.get('rating') # selects user input from url 'rating='
         except AttributeError as abc:
-            return Books.objects.none()
+            return Books.objects.none() # returns an empty set when an attribut error is thrown
 
         if user_input is not None:
 
             try:
-                queryset = queryset.filter(bookratings__rating__gte=user_input).all()
+                queryset = queryset.filter(bookratings__rating__gte=user_input).all() # selects books based on the user input
+                queryset = queryset.values('isbn', 'name', 'authorid__firstname', 'authorid__lastname', 'bookratings__rating') # selects the fields to return
 
             except ValueError as abc:
-                raise APIException("Rating should be a number")
+                raise APIException("Rating should be a number") # returns a message when a value error is thrown
 
-            return queryset
+            return Response({"Book": list(queryset)}) # returns the queryset
         
         
 class BookByAuthorListsViewSet(generics.ListAPIView):
