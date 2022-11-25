@@ -15,7 +15,6 @@ from myapi.views import creditcardSearchViewSet
 
 router = routers.DefaultRouter()
 router.register(r'Wishlists', views.WishlistsViewSet, 'Wishlists')
-router.register(r'Addresses', views.AddressesViewSet, 'Addresses')
 router.register(r'Authors', views.AuthorsViewSet, 'Authors')
 router.register(r'Books', views.BooksViewSet, 'Books')
 router.register(r'Genres', views.GenresViewSet, 'Genres')
@@ -37,7 +36,7 @@ urlpatterns = [
     path('Books/ISBN/', ISBNListsViewSet.as_view()),
     path('Books/Author/', BookByAuthorListsViewSet.as_view()),
     path('Books/Rating/', RatingListsViewSet.as_view()),
-    path('Users/address/', UserSearchViewSet.as_view()),
+    path('Users/search/', UserSearchViewSet.as_view()),
     path('Users/creditcard/', creditcardSearchViewSet.as_view()),
     path('', include(router.urls))
 ]
