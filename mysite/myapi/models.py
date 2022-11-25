@@ -9,21 +9,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
-class Addresses(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    userid = models.ForeignKey('Users', models.DO_NOTHING, db_column='UserID')  # Field name made lowercase.
-    type = models.TextField(db_column='Type')  # Field name made lowercase.
-    address = models.TextField(db_column='Address')  # Field name made lowercase.
-    country = models.TextField(db_column='Country')  # Field name made lowercase.
-    state = models.TextField(db_column='State')  # Field name made lowercase.
-    city = models.TextField(db_column='City')  # Field name made lowercase.
-    zipcode = models.IntegerField(db_column='ZipCode')  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'Addresses'
-
-
 class Authors(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     firstname = models.TextField(db_column='firstName')  # Field name made lowercase.
@@ -122,7 +107,8 @@ class Users(models.Model):
     firstname = models.TextField(db_column='firstName', blank=True, null=True)  # Field name made lowercase.
     lastname = models.TextField(db_column='lastName', blank=True, null=True)  # Field name made lowercase.
     email = models.TextField(db_column='email', unique=True)  # Field name made lowercase.
-    
+    address = models.TextField(db_column='address', blank=True, null=True)  # Field name made lowercase.
+
     class Meta:
         managed = False
         db_table = 'Users'

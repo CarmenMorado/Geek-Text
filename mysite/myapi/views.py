@@ -8,7 +8,6 @@ from .serializers import BooksSerializer
 from .serializers import GenresSerializer
 from .serializers import PurchasedbooksSerializer
 from .serializers import BookratingsSerializer
-from .serializers import AddressesSerializer
 from .serializers import AuthorsSerializer
 from .serializers import UsersSerializer
 from .serializers import CreditcardsSerializer
@@ -20,7 +19,6 @@ from .models import Genres
 from .models import Bookratings
 from .models import Purchasedbooks
 from .models import Authors
-from .models import Addresses
 from .models import Users
 from .models import Creditcards
 from .models import Shoppingcarts
@@ -83,10 +81,6 @@ class WishlistsViewSet(viewsets.ModelViewSet): #ModelViewSet is a class that inc
             raise APIException("Cannot insert a book twice into the same wishlist")
 
 
-class AddressesViewSet(viewsets.ModelViewSet):
-    queryset = Addresses.objects.all().order_by('id')
-    serializer_class = AddressesSerializer
-
 
 class AuthorsViewSet(viewsets.ModelViewSet):
     queryset = Authors.objects.all().order_by('id')
@@ -117,30 +111,28 @@ class PurchasedbooksViewSet(viewsets.ModelViewSet):
 
 #viewset for users that will return all info of all users onto a single queryset.
 class UsersViewSet(viewsets.ModelViewSet):
-    queryset = Addresses.objects.all().order_by('id')
-    serializer_class = AddressesSerializer
+    queryset = Users.objects.all().order_by('id')
+    serializer_class = UsersSerializer
 
     def list(self, request):
-        queryset = Addresses.objects.all().order_by('id')
-        queryset = queryset.values('userid__username', 'userid__password', 'userid__firstname', 'userid__lastname',
-                                   'userid__email', 'address', 'country', 'state', 'city', 'zipcode', )
+        queryset = Users.objects.all().order_by('id')
+        queryset = queryset.values('id', 'username', 'password', 'firstname', 'lastname', 'email', 'address')
         return Response({"User": list(queryset)})
     
 #viewset that will search for a specific user using a URL based on either either username or email.
 class UserSearchViewSet(generics.ListAPIView):
-    queryset = Addresses.objects.all()
-    serializer_class = AddressesSerializer
+    queryset = Users.objects.all()
+    serializer_class = UsersSerializer
 
     def list(self, request):
-        queryset =  Addresses.objects.all()
+        queryset = Users.objects.all()
         userinput = self.request.query_params.get('username')
         if userinput is not None and '@' in userinput:
-            queryset = queryset.filter(userid__email=userinput)
-            queryset = queryset.values('userid__username', 'userid__password', 'userid__firstname', 'userid__lastname', 'userid__email', 'address', 'country','state', 'city', 'zipcode',)
+            queryset = queryset.filter(email=userinput)
+            queryset = queryset.values('id', 'username', 'password', 'firstname', 'lastname', 'email', 'address')
         elif userinput is not None and '@' not in userinput:
-            queryset = queryset.filter(userid__username=userinput)
-            queryset = queryset.values('userid__username', 'userid__password', 'userid__firstname', 'userid__lastname',
-                                       'userid__email', 'address', 'country', 'state', 'city', 'zipcode', )
+            queryset = queryset.filter(username=userinput)
+            queryset = queryset.values('id', 'username', 'password', 'firstname', 'lastname', 'email', 'address')
         return Response({"User": list(queryset)})
 
 #viewset that will return all credit card info for all users on a single queryset. 
@@ -159,7 +151,7 @@ class creditcardSearchViewSet(generics.ListAPIView):
         if userinput is not None and '@' in userinput:
             queryset = queryset.filter(userid__email=userinput)
             queryset = queryset.values('userid__username', 'userid__password', 'userid__firstname', 'userid__lastname',
-                                   'userid__email', 'type', 'number', 'expirationdate', 'cvv')
+                                       'userid__email', 'type', 'number', 'expirationdate', 'cvv')
         elif userinput is not None and '@' not in userinput:
             queryset = queryset.filter(userid__username=userinput)
             queryset = queryset.values('userid__username', 'userid__password', 'userid__firstname', 'userid__lastname',
