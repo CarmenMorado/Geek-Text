@@ -12,6 +12,7 @@ from myapi.views import TopRatedBooksViewSet
 from myapi.views import AverageRatingViewSet
 from myapi.views import UserSearchViewSet
 from myapi.views import creditcardSearchViewSet
+from myapi.views import AverageRatingByQueryViewSet
 
 router = routers.DefaultRouter()
 router.register(r'Wishlists', views.WishlistsViewSet, 'Wishlists')
@@ -38,5 +39,6 @@ urlpatterns = [
     path('Books/Rating/', RatingListsViewSet.as_view()),
     path('Users/search/', UserSearchViewSet.as_view()),
     path('Users/creditcard/', creditcardSearchViewSet.as_view()),
+    path('Bookratings/AverageRatingQuery/', AverageRatingByQueryViewSet.as_view())
     path('', include(router.urls))
 ]
