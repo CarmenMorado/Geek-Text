@@ -39,6 +39,6 @@ urlpatterns = [
     path('Books/Rating/', RatingListsViewSet.as_view()),
     path('Users/search/', UserSearchViewSet.as_view()),
     path('Users/creditcard/', creditcardSearchViewSet.as_view()),
-    path('Bookratings/AverageRatingQuery/', AverageRatingByQueryViewSet.as_view())
+    path('Bookratings/AverageRatingQuery/', AverageRatingByQueryViewSet.as_view()),
     path('', include(router.urls))
 ]
