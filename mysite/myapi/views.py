@@ -199,12 +199,29 @@ class GenreListsViewSet(generics.ListAPIView):
             queryset = queryset.filter(genreid__genre=user_input) # selects books based on the genre that was entered by the user 
 
             return queryset # returns the queryset
+        
+class BookByAuthorListsViewSet(generics.ListAPIView):
+    serializer_class = BooksSerializer # selects the serializer that is used
+    def get_queryset(self): # methody to get queryset
+        queryset = Books.objects.all() # selects all book
+        try:
+            user_input = self.request.query_params.get('name').title().replace("-", " ") # takes users input
+            chunks = user_input.split() # Allows to separate first name from last name (if the user imput have two words separated by a blank space)
+        except AttributeError as abc:
+            return Books.objects.none()  # returns an empty set when an arrtibute error is thrown
+        if (user_input is not None and len(chunks) > 1): # Allows to search by first name and last name separated by a blank space
+            queryset = queryset.filter(authorid__firstname__icontains=chunks[0])
+            queryset = queryset.filter(authorid__lastname__icontains=chunks[1])
+        elif (user_input is not None): # Allows to search by only first name
+            queryset = queryset.filter(authorid__firstname__icontains=user_input)
+        return queryset # returns the queryset       
 
+# This is used to search books by ISBN 
 class ISBNListsViewSet(generics.ListAPIView):
-    serializer_class = BooksSerializer
-    queryset = Books.objects.all()
+    serializer_class = BooksSerializer # selects the serializer
+    queryset = Books.objects.all()  # sets the queryset to all books
     filter_backends = [filters.SearchFilter]
-    search_fields = ['isbn']
+    search_fields = ['isbn'] # selects the field that is searched
 
 # view to return books based on a certain number and higher
 class RatingListsViewSet(generics.ListAPIView): 
@@ -228,20 +245,3 @@ class RatingListsViewSet(generics.ListAPIView):
                 raise APIException("Rating should be a number") # returns a message when a value error is thrown
 
             return Response({"Book": list(queryset)}) # returns the queryset
-        
-        
-class BookByAuthorListsViewSet(generics.ListAPIView):
-    serializer_class = BooksSerializer
-    def get_queryset(self):
-        queryset = Books.objects.all()
-        try:
-            user_input = self.request.query_params.get('name').title().replace("-", " ")
-            chunks = user_input.split()
-        except AttributeError as abc:
-            return Books.objects.none()
-        if (user_input is not None and len(chunks) > 1):
-            queryset = queryset.filter(authorid__firstname__icontains=chunks[0])
-            queryset = queryset.filter(authorid__lastname__icontains=chunks[1])
-        elif (user_input is not None):
-            queryset = queryset.filter(authorid__firstname__icontains=user_input)
-        return queryset
