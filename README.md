@@ -4,6 +4,6 @@ An API Service that supports an online web application bookstore which targets a
 
 Database Schema 
 
-<img width="1153" alt="Updated Schema" src="https://user-images.githubusercontent.com/42749527/201548479-93d3d726-77b5-4614-9dbf-ac80a0270467.png">
+<img width="1065" alt="Database Schema" src="https://user-images.githubusercontent.com/42749527/204108728-a4ebbb4c-4f64-41a6-ae68-5b04c0e1c8c6.png">
 
 
