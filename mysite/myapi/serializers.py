@@ -91,3 +91,27 @@ class ShoppingcartsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shoppingcarts
         fields = ('ordernumber', 'userid', 'bookid')
+
+# implemented using method create in get average serializer
+class AvgBookRatingByQuerySerializer(serializers.ModelSerializer):
+    average_rating = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Bookratings
+        fields = ("id", "average_rating")
+
+    def get_average_rating(self, obj):
+        # get the average rating for the book by the book id
+        average_rating = Bookratings.objects.filter(bookid=obj.id).aggregate(
+            Avg("rating")
+        )["rating__avg"]
+        # get the query parameter
+        ag = self.context.get('avg', False)
+        # select the items if the query parameter is not null
+        if average_rating is not None:
+            if float(ag) <= average_rating:
+                return average_rating  # return a number if it meets query parameter
+            else:
+                return ""  # return an empty string if it does not meet the query parameter
+        else:
+            return ""  # return an empty string if it does not meet the query parameter

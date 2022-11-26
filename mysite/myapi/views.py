@@ -12,6 +12,7 @@ from .serializers import AuthorsSerializer
 from .serializers import UsersSerializer
 from .serializers import CreditcardsSerializer
 from .serializers import ShoppingcartsSerializer
+from .serializers import AvgBookRatingByQuerySerializer
 
 from .models import Wishlists
 from .models import Books
@@ -245,3 +246,13 @@ class RatingListsViewSet(generics.ListAPIView):
                 raise APIException("Rating should be a number") # returns a message when a value error is thrown
 
             return Response({"Book": list(queryset)}) # returns the queryset
+
+# view to implement average query using average from serializer        
+class AverageRatingByQueryViewSet(generics.ListAPIView):
+    serializer_class = AvgBookRatingByQuerySerializer # select serializer
+    queryset = Books.objects.all() # select all books
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context() # get context from serializer
+        context.update({"avg": self.request.query_params.get('avg', False)}) # add query to serializer context
+        return context
