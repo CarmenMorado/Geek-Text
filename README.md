@@ -1,4 +1,11 @@
 # Geek-Text
+An API Service to support an online web application bookstore which targets a particular niche in 
+technology.
+
+Database Schema 
+
+<img width="1065" alt="Database Schema" src="https://user-images.githubusercontent.com/42749527/204108728-a4ebbb4c-4f64-41a6-ae68-5b04c0e1c8c6.png">
+
 
 
 Getting Started  
@@ -260,12 +267,3 @@ Users are able to remove a book from one of their existing Wishlists into their 
  
 
 Users are able to retrieve a list of books from a user’s Wishlist by using query parameters. First, select “GET” and use the following URL: http://localhost:8000/Wishlists/. Next, click “Params.” The keys for “userid” and “name” must all contain a value in order to achieve this.   
-
-
-
-
-Database Schema 
-
-<img width="1065" alt="Database Schema" src="https://user-images.githubusercontent.com/42749527/204108728-a4ebbb4c-4f64-41a6-ae68-5b04c0e1c8c6.png">
-
-
