@@ -3,6 +3,8 @@
 
 Getting Started  
 
+ 
+
 # Create the project directory 
 
 mkdir geek-text 
@@ -39,24 +41,37 @@ http://localhost:8000
 
  
 
-Functionality
+ 
+
+Functionality 
+
  
 
 Book Browsing and Sorting 
 
-Users are able to retrieve list of books by genre by visiting http://localhost:8000/Books/Genre and using ?genre= to search. For example, http://localhost:8000/Books/Genre/?genre=technology   
+ 
 
-Users are able to retrieve list of the top 10 sellers by visiting http://localhost:8000/Books/TopSellers   
+Users are able to retrieve list of books by genre by visiting http://localhost:8000/Books/Genre and using ?genre= to search. For example, http://localhost:8000/Books/Genre/?genre=technology  
+
+ 
+
+Users are able to retrieve list of the top 10 sellers by visiting http://localhost:8000/Books/TopSellers  
+
+ 
 
 Users are able to retrieve list of books for a particular rating and higher http://localhost:8000/Books/Rating/ and using ?rating= to search. For example, 
 
-http://localhost:8000/Books/Rating/?rating=2   
+http://localhost:8000/Books/Rating/?rating=2  
+
+ 
 
 Users are able to retrieve list of x books at a time where x is an integer from a given position in the overall record set by visiting http://localhost:8000/Books/ and using ?limit = and ?offset= to search. For example, http://localhost:8000/Books/?limit=3&offset=2. The default is 3 books per page. 
 
  
 
-Profile Management  
+Profile Management 
+
+ 
 
 Administrators are able to create new users using a POST call to  
 
@@ -78,11 +93,15 @@ http://127.0.0.1:8000/Users/ using this format in the body:
 
 } 
 
-(username, password, and email are required.)  
+(username, password, and email are required.) 
+
+ 
 
 Administrators are able to search for a user by their username or email using: 
 
-http://127.0.0.1:8000/Users/search/?username=  
+http://127.0.0.1:8000/Users/search/?username= 
+
+ 
 
 Administrators are able to update a user’s info by using a PATCH call: 
 
@@ -106,7 +125,9 @@ Where “1” is the id of the user and using the format:
 
 } 
 
-Exclude any fields which are not needed.  
+Exclude any fields which are not needed. 
+
+ 
 
 Administrators are able to search for user’s credit card info by using: 
 
@@ -118,17 +139,23 @@ Shopping Cart
 
  
 
-Book Details  
+Book Details 
+
+ 
 
 Users are able to retrieve list of books by ISBN by visiting 
 
-http://127.0.0.1:8000/Books/Author/ and using ?name= in a GET call. For example, http://127.0.0.1:8000/Books/Author/?name=Matthew Ball  
+http://127.0.0.1:8000/Books/Author/ and using ?name= in a GET call. For example, http://127.0.0.1:8000/Books/Author/?name=Matthew Ball 
+
+ 
 
 Users are able to search a books by author by visiting 
 
 http://127.0.0.1:8000/Books/ISBN/ and using ?search= in a GET call. For example,  
 
-http://127.0.0.1:8000/Books/ISBN/?search= 978-1324092032  
+http://127.0.0.1:8000/Books/ISBN/?search= 978-1324092032 
+
+ 
 
 Administrators are able to create authors by making a POST call to http://127.0.0.1:8000/Authors/ and the format in the body must be: 
 
@@ -142,7 +169,9 @@ Administrators are able to create authors by making a POST call to http://127.0.
 
     "publisher": "" 
 
-}  
+} 
+
+ 
 
 Administrators are able to create books by making a POST call to http://127.0.0.1:8000/Books/ and the format in the body must be: 
 
@@ -170,11 +199,15 @@ Administrators are able to create books by making a POST call to http://127.0.0.
 
  
 
-Book Rating and Commenting  
+Book Rating and Commenting 
+
+ 
 
 Users are able to create a rating review for a book by using a POST call to: 
 
-http://127.0.0.1:8000/Bookratings/ and the format in the body must be:  
+http://127.0.0.1:8000/Bookratings/ and the format in the body must be: 
+
+ 
 
 {	 
 
@@ -190,29 +223,43 @@ http://127.0.0.1:8000/Bookratings/ and the format in the body must be:
 
     "commenttimestamp":  "{{currentDate}}"     
 
-}  
+} 
+
+ 
 
 Users are able to retrieve a list of top-rated books by highest to lowest by visiting: 
 
-http://127.0.0.1:8000/Bookratings/TopRated/  
+http://127.0.0.1:8000/Bookratings/TopRated/ 
+
+ 
 
 Users are able to retrieve the average rating of a book by visiting: 
 
-http://127.0.0.1:8000/Bookratings/AverageRating/  
+http://127.0.0.1:8000/Bookratings/AverageRating/ 
 
  
 
  
 
-Wishlist Management  
+ 
+
+Wishlist Management 
+
+ 
 
 Users are able to create a Wishlist of books that belongs to a user by going on Postman, selecting “POST” and using the following URL: http://localhost:8000/Wishlists/. Then, by clicking on “Body” and “x-www-form-urlencoded." In order to create a Wishlist, the keys for “userid,” “bookid,” and “name” must all contain a value.  
 
+ 
+
 Users are able to add a book to an existing Wishlist by going on Postman, selecting “POST” and using the following URL: http://localhost:8000/Wishlists/. Then, by clicking on “Body” and “x-www-form-urlencoded." In order to add a book to a Wishlist, the keys for “userid,” “bookid,” and “name” must all contain a value. Users will not be able to add a book twice to the same Wishlist. 
 
-Users are able to remove a book from one of their existing Wishlists into their shopping carts by first selecting “DELETE” and using the following URL: http://localhost:8000/Wishlists/id/. The “id” at the end of the URL must correspond to the primary key / id from the existing Wishlist instance that contains the book for deletion. This call will perform two actions at the same time: The book will be removed from their Wishlist and, finally, the book will be added into their shopping cart. In order to view the newly added book in the shopping cart, first select “GET” and use the following URL: http://localhost:8000/Shoppingcarts/.  
+ 
 
-Users are able to retrieve a list of books from a user’s Wishlist by using query parameters. First, select “GET” and use the following URL: http://localhost:8000/Wishlists/. Next, click “Params.” The keys for “userid” and “name” must all contain a value in order to achieve this.  
+Users are able to remove a book from one of their existing Wishlists into their shopping carts by first selecting “DELETE” and using the following URL: http://localhost:8000/Wishlists/id/. The “id” at the end of the URL must correspond to the primary key / id from the existing Wishlist instance that contains the book for deletion. This call will perform two actions at the same time: The book will be removed from their Wishlist and, finally, the book will be added into their shopping cart. In order to view the newly added book in the shopping cart, first select “GET” and use the following URL: http://localhost:8000/Shoppingcarts/. 
+
+ 
+
+Users are able to retrieve a list of books from a user’s Wishlist by using query parameters. First, select “GET” and use the following URL: http://localhost:8000/Wishlists/. Next, click “Params.” The keys for “userid” and “name” must all contain a value in order to achieve this.   
 
 
 
