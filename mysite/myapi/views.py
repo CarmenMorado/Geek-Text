@@ -228,7 +228,7 @@ class ISBNListsViewSet(generics.ListAPIView):
 class RatingListsViewSet(generics.ListAPIView): 
     serializer_class = BooksSerializer # selects the serializer
 
-    def get_queryset(self, request):
+    def list(self, request):
         queryset = Books.objects.all() # sets the queryset to all books
 
         try:
