@@ -127,14 +127,14 @@ class UserSearchViewSet(generics.ListAPIView):
 
     def list(self, request):
         queryset = Users.objects.all()
-        userinput = self.request.query_params.get('username')
-        if userinput is not None and '@' in userinput:
-            queryset = queryset.filter(email=userinput)
-            queryset = queryset.values('id', 'username', 'password', 'firstname', 'lastname', 'email', 'address')
-        elif userinput is not None and '@' not in userinput:
-            queryset = queryset.filter(username=userinput)
-            queryset = queryset.values('id', 'username', 'password', 'firstname', 'lastname', 'email', 'address')
-        return Response({"User": list(queryset)})
+        userinput = self.request.query_params.get('username') #gets users input
+        if userinput is not None and '@' in userinput: #Checks if input is an email
+            queryset = queryset.filter(email=userinput) #filters by input
+            queryset = queryset.values('id', 'username', 'password', 'firstname', 'lastname', 'email', 'address') #queryset with user info with email
+        elif userinput is not None and '@' not in userinput: #Checks if input is a username
+            queryset = queryset.filter(username=userinput) #filters by input
+            queryset = queryset.values('id', 'username', 'password', 'firstname', 'lastname', 'email', 'address') #queryset with user info with username
+        return Response({"User": list(queryset)}) #return user info
 
 #viewset that will return all credit card info for all users on a single queryset. 
 class CreditcardsViewSet(viewsets.ModelViewSet):
@@ -148,16 +148,16 @@ class creditcardSearchViewSet(generics.ListAPIView):
 
     def list(self, request):
         queryset = Creditcards.objects.all()
-        userinput = self.request.query_params.get('username')
-        if userinput is not None and '@' in userinput:
-            queryset = queryset.filter(userid__email=userinput)
+        userinput = self.request.query_params.get('username') #gets users input
+        if userinput is not None and '@' in userinput: #Checks if input is an email
+            queryset = queryset.filter(userid__email=userinput) #filters by input
             queryset = queryset.values('userid__username', 'userid__password', 'userid__firstname', 'userid__lastname',
-                                       'userid__email', 'type', 'number', 'expirationdate', 'cvv')
-        elif userinput is not None and '@' not in userinput:
-            queryset = queryset.filter(userid__username=userinput)
+                                       'userid__email', 'type', 'number', 'expirationdate', 'cvv') #queryset with user info with email
+        elif userinput is not None and '@' not in userinput: #Checks if input is a username
+            queryset = queryset.filter(userid__username=userinput)  #filters by input
             queryset = queryset.values('userid__username', 'userid__password', 'userid__firstname', 'userid__lastname',
-                                       'userid__email', 'type', 'number', 'expirationdate', 'cvv')
-        return Response({"User": list(queryset)})
+                                       'userid__email', 'type', 'number', 'expirationdate', 'cvv') #queryset with user info with username
+        return Response({"User": list(queryset)}) #return creditcard info
  
     
 class ShoppingcartsViewSet(viewsets.ModelViewSet):
